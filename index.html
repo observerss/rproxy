@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>rproxy - Open Source Reverse Proxy</title>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="content">
+<div id="intro">
+  <h1>Welcome to rproxy's homepage!</h1>
+  <h2>What is rproxy?</h2>
+  <p>The <u>rproxy</u> is a open-source twisted based enhanced reverse proxy that does a lot more than what traditional reverse proxies do:
+  <ul>
+    <li><b>Content Replacing:</b> traditional proxies doesn't work when pages are using ABSOLUTE urls, you will end up with visiting the pages directly rather than through reverse proxy. <u>rproxy</u> has content replacing options that can solve this problem for you.</li>
+    <li><b>Global reverse proxy:</b> traditional reverse proxies can only serve the links you are currently visiting, however when the page contains other links that you want to visit through reverse proxy, the only thing you can do is set up another reverse proxy and visit it manually. <u>rproxy</u> can make your reverse proxy "global" so that it will automatically "translate" the links.</li>
+    <li><b>Easy to set up:</b> traditional reverse proxies, such as nginx, squid, though very powerful, is hard to set up, whereas <u>rproxy</u> has very simple and clear web interfaces and self-explained conf files to set up</li>
+  </ul>
+  <h2>Project Home and Source code</h2>
+  <p>coming soon</p>
+  <h2>Available reverse proxies</h2>
+  <p>You can also <a href="add">Add a new rule</a> or click edit to edit exist rules</p>
+</div>
+<table id="mytable" cellspacing="0" summary="">
+<caption>Table : Currenct available reverse proxy</caption>
+  <tr>
+    <th scope="col" abbr="Target" class="nobg">Target Website</th>
+    <th scope="col" abbr="Alias">Name alias</th>
+    <th scope="col" abbr="Html">HTML</th>
+    <th scope="col" abbr="Javascript">Javascript</th>
+    <th scope="col" abbr="Css">CSS</th>
+    <th scope="col" abbr="Flash">Flash</th>
+    <th scope="col" abbr="Global">Global</th>
+    <th scope="col" abbr="Edit">Edit</th>
+  </tr>
+  %for i in range(len(cfgs)):
+     %if i%2==0:
+      <tr>
+        <th scope="row" abbr="tt" class="spec"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a></th>
+        <td>${cfgs[i][1]}</td>
+        <td>${cfgs[i][2]}</td>
+        <td>${cfgs[i][3]}</td>
+        <td>${cfgs[i][4]}</td>
+        <td>${cfgs[i][5]}</td>
+        <td>${cfgs[i][6]}</td>
+        <td><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="/del?alias=${cfgs[i][1]}">DEL</a></td>
+      </tr>
+     %else:
+      <tr>
+        <th scope="row" abbr="tt" class="specalt"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a></th>
+        <td class="alt">${cfgs[i][1]}</td>
+        <td class="alt">${cfgs[i][2]}</td>
+        <td class="alt">${cfgs[i][3]}</td>
+        <td class="alt">${cfgs[i][4]}</td>
+        <td class="alt">${cfgs[i][5]}</td>
+        <td class="alt">${cfgs[i][6]}</td>
+        <td class="alt"><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="/del?alias=${cfgs[i][1]}">DEL</a></td>
+      </tr>
+     %endif
+  %endfor
+</table>
+</div>
+
+</body>
+</html>
+

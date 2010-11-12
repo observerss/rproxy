@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>rproxy - Add/Edit rules</title>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="content">
+<div id="intro">
+  <h2>Please Edit your rule</h2>
+</div>
+<form method="POST" action="edit">
+<table id="mytable" cellspacing="0" summary="">
+<caption>Table : Rule</caption>
+  <tr>
+    <th scope="col" abbr="Option" class="nobg">Option</th>
+    <th scope="col" abbr="Value">Value</th>
+    <th scope="col" abbr="Description">Description</th>
+  </tr>
+      <tr>
+        <th scope="row" abbr="tt" class="spec">Target</th>
+        <td><input type="text" name="target" value="${cfg[0]}"/></td>
+        <td>Target website address</td>
+      </tr>
+      <tr>
+        <th scope="row" abbr="tt" class="specalt">Alias</th>
+        <td class="alt"><input type="text" name="alias" value="${cfg[1]}" /></td>
+        <td class="alt">Alias name for target website</td>
+      </tr>
+</table>
+<input type="image" src="submit.jpg" name="submit" value="Submit" />
+</form>
+</div>
+
+</body>
+</html>
+
