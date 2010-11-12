@@ -116,6 +116,7 @@ class MyReverseProxyResource(Resource):
         Resource.__init__(self)
         self.rp = RPConfig(CONFPATH,domain=DOMAIN)
         self.reactor = reactor
+        self.scheme = ''
         self.host = ''
         self.port = 80
         self.realhost = ''
@@ -137,13 +138,15 @@ class MyReverseProxyResource(Resource):
             self.host == "www."+DOMAIN:
             return self.confpage(request)
         
-        self.realhost,self.port = self.rp.get_realhost(self.host)
+        self.realhost,self.port,self.scheme = self.rp.get_realhost(self.host)
         # if not redirect is found, confpage again
         if self.realhost == self.host:
             return self.confpage(request)
 
         if request.getHeader("x-forwarded-proto")=="https":
-            self.port = 443
+            if not self.scheme:
+                self.port = 443
+                self.scheme = 'https'
 
         for k,v in request.getAllHeaders().items():
             request.received_headers[k] = self.rp.get_realheader(self.host,v)
@@ -156,7 +159,7 @@ class MyReverseProxyResource(Resource):
             request.method, request.uri, request.clientproto,
             request.getAllHeaders(), request.content.read(), request)
         if DEBUG:
-            print self.realhost,self.port
+            print self.realhost,self.port,self.scheme
             print request.method
             print request.uri
             print request.clientproto
@@ -165,7 +168,7 @@ class MyReverseProxyResource(Resource):
         clientFactory.host = self.host
         clientFactory.realhost = self.realhost
         clientFactory.rp = self.rp
-        if self.port == 443:
+        if self.scheme == 'https':
             self.reactor.connectSSL(self.realhost,self.port,clientFactory,ssl.ClientContextFactory())
         else:
             self.reactor.connectTCP(self.realhost,self.port,clientFactory)
@@ -183,7 +186,7 @@ class MyReverseProxyResource(Resource):
             self.rp.del_alias(alias)
             return self.page_index()
         elif request.uri.startswith("/add"):
-            cfg = ['','','','','','','']
+            cfg = ['','','Y','Y','Y','Y','N','N']
             html = Template(open("edit.html").read()).render(cfg=cfg)
             return html
         elif request.uri.startswith("/edit"):
@@ -193,8 +196,19 @@ class MyReverseProxyResource(Resource):
                 html = Template(open("edit.html").read()).render(cfg=cfg)
                 return html
             elif request.method == "POST":
-                # get post param
-                # self.rp.add_alias()
+                args = request.args
+                try:
+                    target = args['target'][0]
+                    alias = args['alias'][0]
+                    html = args['html'][0].upper()
+                    css = args['css'][0].upper()
+                    js = args['js'][0].upper()
+                    flash = args['flash'][0].upper()
+                    extern = args['global'][0].upper()
+                    sslonhttp = args['sslonhttp'][0].upper()
+                    self.rp.add_alias(target,alias,html,css,js,flash,extern,sslonhttp)
+                except:
+                    pass
                 return self.page_index() 
         else:
             if os.path.exists(request.uri[1:]):
@@ -210,8 +224,9 @@ class MyReverseProxyResource(Resource):
  
 site = server.Site(MyReverseProxyResource())
 #site = server.Site(ReverseProxyResource('www.google.com',80,''))
-reactor.listenTCP(PORT, site)
-reactor.run()
+if DEBUG:
+    reactor.listenTCP(PORT, site)
+    reactor.run()
 application = Application("RProxy")
 appService = internet.TCPServer(PORT,site)
 appService.setServiceParent(application)

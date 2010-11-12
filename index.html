@@ -33,29 +33,32 @@
     <th scope="col" abbr="Css">CSS</th>
     <th scope="col" abbr="Flash">Flash</th>
     <th scope="col" abbr="Global">Global</th>
+    <th scope="col" abbr="SSLonHTTP">SSLonHTTP</th>
     <th scope="col" abbr="Edit">Edit</th>
   </tr>
   %for i in range(len(cfgs)):
      %if i%2==0:
       <tr>
-        <th scope="row" abbr="tt" class="spec"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a></th>
+        <th scope="row" abbr="tt" class="spec"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a>&nbsp;<a href="https://${cfgs[i][1]}.${domain}">https</a></th>
         <td>${cfgs[i][1]}</td>
         <td>${cfgs[i][2]}</td>
         <td>${cfgs[i][3]}</td>
         <td>${cfgs[i][4]}</td>
         <td>${cfgs[i][5]}</td>
         <td>${cfgs[i][6]}</td>
+        <td>${cfgs[i][7]}</td>
         <td><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="/del?alias=${cfgs[i][1]}">DEL</a></td>
       </tr>
      %else:
       <tr>
-        <th scope="row" abbr="tt" class="specalt"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a></th>
+        <th scope="row" abbr="tt" class="specalt"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a>&nbsp;<a href="https://${cfgs[i][1]}.${domain}">https</a></th>
         <td class="alt">${cfgs[i][1]}</td>
         <td class="alt">${cfgs[i][2]}</td>
         <td class="alt">${cfgs[i][3]}</td>
         <td class="alt">${cfgs[i][4]}</td>
         <td class="alt">${cfgs[i][5]}</td>
         <td class="alt">${cfgs[i][6]}</td>
+        <td class="alt">${cfgs[i][7]}</td>
         <td class="alt"><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="/del?alias=${cfgs[i][1]}">DEL</a></td>
       </tr>
      %endif
