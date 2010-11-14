@@ -32,32 +32,80 @@
       </tr>
       <tr>
         <th scope="row" abbr="tt" class="spec">HTML Replace?</th>
-        <td ><input type="text" size=1 name="html" value="${cfg[2]}"/></td>
+        <td>
+        %if cfg[2]=="Y":
+          Y<input type="radio" size=1 name="html" value="Y" checked/>/
+          N<input type="radio" size=1 name="html" value="N"/>
+        %else:
+          Y<input type="radio" size=1 name="html" value="Y"/>/
+          N<input type="radio" size=1 name="html" value="N" checked/>
+        %endif
+        </td>
         <td align=left>Y/N, define whether to let rproxy replace html content</td>
       </tr>
       <tr>
         <th scope="row" abbr="tt" class="specalt">CSS Replace?</th>
-        <td class="alt" ><input type="text" size=1 name="css" value="${cfg[3]}" /></td>
+        <td class="alt">
+        %if cfg[3]=="Y":
+          Y<input type="radio" size=1 name="css" value="Y" checked/>/
+          N<input type="radio" size=1 name="css" value="N"/>
+        %else:
+          Y<input type="radio" size=1 name="css" value="Y"/>/
+          N<input type="radio" size=1 name="css" value="N" checked/>
+        %endif
+        </td>
         <td class="alt" align=left>Y/N, define whether to let  rproxy replace css content</td>
       </tr>
       <tr>
         <th scope="row" abbr="tt" class="spec">Javascript Replace?</th>
-        <td ><input type="text" size=1 name="js" value="${cfg[4]}"/></td>
+        <td >
+        %if cfg[4]=="Y":
+          Y<input type="radio" size=1 name="js" value="Y" checked/>/
+          N<input type="radio" size=1 name="js" value="N"/>
+        %else:
+          Y<input type="radio" size=1 name="js" value="Y"/>/
+          N<input type="radio" size=1 name="js" value="N" checked/>
+        %endif
+        </td>
         <td align=left>Y/N, define whether to let rproxy replace javscript content, for a bypass-GFW purpose, html,css,js are all recommended to be set to Y</td>
       </tr>
       <tr>
         <th scope="row" abbr="tt" class="specalt">Flash Replace?</th>
-        <td class="alt" ><input type="text" size=1 name="flash" value="${cfg[5]}" /></td>
+        <td class="alt" >
+        %if cfg[5]=="Y":
+          Y<input type="radio" size=1 name="flash" value="Y" checked/>/
+          N<input type="radio" size=1 name="flash" value="N"/>
+        %else:
+          Y<input type="radio" size=1 name="flash" value="Y"/>/
+          N<input type="radio" size=1 name="flash" value="N" checked/>
+        %endif
+        </td>
         <td class="alt" align=left>Y/N, not implemented, this attr is aimed to let youtube working</td>
       </tr>
       <tr>
         <th scope="row" abbr="tt" class="spec">Make this alias "global"?</th>
-        <td ><input type="text" size=1 name="global" value="${cfg[6]}"/></td>
+        <td>
+        %if cfg[6]=="Y":
+          Y<input type="radio" size=1 name="global" value="Y" checked/>/
+          N<input type="radio" size=1 name="global" value="N"/>
+        %else:
+          Y<input type="radio" size=1 name="global" value="Y"/>/
+          N<input type="radio" size=1 name="global" value="N" checked/>
+        %endif
+        </td>
         <td align=left>Y/N, "global" aliases will work all together to ensure an aliased environment. For example, when you have facebook and twitter both aliased and "global"ed, the twitter links in your facebook page will be automatically translated to use rproxy.</td>
       </tr>
       <tr>
         <th scope="row" abbr="tt" class="specalt">Use SSL on http visiting</th>
-        <td class="alt"><input type="text" size=1 name="sslonhttp" value="${cfg[7]}" /></td>
+        <td class="alt">
+        %if cfg[7]=="Y":
+          Y<input type="radio" size=1 name="sslonhttp" value="Y" checked/>/
+          N<input type="radio" size=1 name="sslonhttp" value="N"/>
+        %else:
+          Y<input type="radio" size=1 name="sslonhttp" value="Y"/>/
+          N<input type="radio" size=1 name="sslonhttp" value="N" checked/>
+        %endif
+        </td>
         <td class="alt" align=left>Y/N, when set to Y, https://alias.rproxydomain will behave like http://alias.rproxydomain, this enables content-protection even when your target website does not support https. Warning: you SHOULD ONLY set to Y if your target website doesn't support https, if your target is https enabled, just set to N, and https://alias.rproxydomain will automatically communicates in SSL</td>
       </tr>
 </table>

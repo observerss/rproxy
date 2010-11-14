@@ -94,6 +94,8 @@ class RPConfig:
                     ("text" in ctype):
                     #(ctype.startswith("application/x-shockwave-flash") and flash == "Y"):
                 data = data.replace(target,host)
+            if sslonhttp == "Y":
+                data = re.sub(r"http://([a-zA-Z0-9\-\.]+%s)"%self.domain,r"https://\1",data)
         return data
 
     def __process(self,host,ctype,data):

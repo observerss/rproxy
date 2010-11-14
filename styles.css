@@ -1,5 +1,5 @@
 body {
-    font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    font: normal 14px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
     color: #4f6b72;
     background: #E6EAE9;
 }
@@ -27,13 +27,13 @@ a {
 
 caption {
     padding: 0 0 5px 0;
-    width: 700px;    
-    font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    width: 950px;    
+    font: italic 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
     text-align: right;
 }
 
 th {
-    font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    font: bold 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
     color: #4f6b72;
     border-right: 1px solid #C1DAD7;
     border-bottom: 1px solid #C1DAD7;
@@ -70,13 +70,13 @@ th.spec {
     border-left: 1px solid #C1DAD7;
     border-top: 0;
     background: #fff url(images/bullet1.gif) no-repeat;
-    font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    font: bold 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 }
 
 th.specalt {
     border-left: 1px solid #C1DAD7;
     border-top: 0;
     background: #f5fafa url(images/bullet2.gif) no-repeat;
-    font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    font: bold 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
     color: #797268;
 }

@@ -19,6 +19,7 @@ PATH = "/var/www/rproxy"
 sys.path.append(PATH)
 from rpconfig import RPConfig
 
+WEBCONFIG = True
 DEBUG = False
 CONFPATH = PATH + "/rproxy.cfg"
 DOMAIN = "rproxy.org"
@@ -179,6 +180,8 @@ class MyReverseProxyResource(Resource):
             return html
 
     def confpage(self,request):
+        if not WEBCONFIG:
+            return "web config is disabled."
         if request.uri == "/":
             return self.page_index()
         elif request.uri.startswith("/del"):
@@ -206,7 +209,8 @@ class MyReverseProxyResource(Resource):
                     flash = args['flash'][0].upper()
                     extern = args['global'][0].upper()
                     sslonhttp = args['sslonhttp'][0].upper()
-                    self.rp.add_alias(target,alias,html,css,js,flash,extern,sslonhttp)
+                    if alias:
+                        self.rp.add_alias(target,alias,html,css,js,flash,extern,sslonhttp)
                 except:
                     pass
                 return self.page_index() 

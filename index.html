@@ -19,9 +19,10 @@
     <li><b>Easy to set up:</b> traditional reverse proxies, such as nginx, squid, though very powerful, is hard to set up, whereas <u>rproxy</u> has very simple and clear web interfaces and self-explained conf files to set up</li>
   </ul>
   <h2>Project Home and Source code</h2>
-  <p>coming soon</p>
+  <p><a href="https://github.com/observerss/rproxy">rproxy@github</a></p>
   <h2>Available reverse proxies</h2>
-  <p>You can also <a href="add">Add a new rule</a> or click edit to edit exist rules</p>
+  <p>You can <a href="add">add a new rule</a> or click edit to edit exist rules</p>
+  <p>For help on options, see <a href="add">Help Page</a></p>
 </div>
 <table id="mytable" cellspacing="0" summary="">
 <caption>Table : Currenct available reverse proxy</caption>
@@ -47,7 +48,7 @@
         <td>${cfgs[i][5]}</td>
         <td>${cfgs[i][6]}</td>
         <td>${cfgs[i][7]}</td>
-        <td><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="/del?alias=${cfgs[i][1]}">DEL</a></td>
+        <td><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="#" onclick="location.href='/del'+'?alias=${cfgs[i][1]}';">DEL</a></td>
       </tr>
      %else:
       <tr>
@@ -59,7 +60,7 @@
         <td class="alt">${cfgs[i][5]}</td>
         <td class="alt">${cfgs[i][6]}</td>
         <td class="alt">${cfgs[i][7]}</td>
-        <td class="alt"><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="/del?alias=${cfgs[i][1]}">DEL</a></td>
+        <td class="alt"><a href="/edit?alias=${cfgs[i][1]}">EDIT</a>/<a href="#" onclick="location.href='/del'+'?alias=${cfgs[i][1]}';">DEL</a></td>
       </tr>
      %endif
   %endfor
