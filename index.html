@@ -40,7 +40,12 @@
   %for i in range(len(cfgs)):
      %if i%2==0:
       <tr>
-        <th scope="row" abbr="tt" class="spec"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a>&nbsp;<a href="https://${cfgs[i][1]}.${domain}">https</a></th>
+        <th scope="row" abbr="tt" class="spec" rows=1>
+            <a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a><br />
+            %if cfgs[i][7]=="Y":
+              <a href="https://${cfgs[i][1]}.${domain}">https_proxy</a>
+            %endif
+        </th>
         <td>${cfgs[i][1]}</td>
         <td>${cfgs[i][2]}</td>
         <td>${cfgs[i][3]}</td>
@@ -52,7 +57,12 @@
       </tr>
      %else:
       <tr>
-        <th scope="row" abbr="tt" class="specalt"><a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a>&nbsp;<a href="https://${cfgs[i][1]}.${domain}">https</a></th>
+        <th scope="row" abbr="tt" class="specalt">
+            <a href="http://${cfgs[i][1]}.${domain}">${cfgs[i][0]}</a><br />
+            %if cfgs[i][7]=="Y":
+              <a href="https://${cfgs[i][1]}.${domain}">https_proxy</a>
+            %endif
+        </th>
         <td class="alt">${cfgs[i][1]}</td>
         <td class="alt">${cfgs[i][2]}</td>
         <td class="alt">${cfgs[i][3]}</td>
