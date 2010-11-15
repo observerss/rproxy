@@ -20,7 +20,7 @@ sys.path.append(PATH)
 from rpconfig import RPConfig
 
 WEBCONFIG = True
-DEBUG = True
+DEBUG = False
 CONFPATH = PATH + "/rproxy.cfg"
 DOMAIN = "rproxy.org"
 PORT = 8484
