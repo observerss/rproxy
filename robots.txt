@@ -1,4 +1,2 @@
 User-agent: *
-Disallow: /edit
-Disallow: /add
-Disallow: /del
+Disallow: /

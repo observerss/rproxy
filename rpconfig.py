@@ -101,8 +101,8 @@ class RPConfig:
                     ("text" in ctype):
                     #(ctype.startswith("application/x-shockwave-flash") and flash == "Y"):
                 data = data.replace(target,host)
-            if sslonhttp == "Y" and ("text" in ctype) or ("javascript" in ctype):
-                data = re.sub(r"http://([a-zA-Z0-9\-\.]+%s)"%self.domain,r"https://\1",data)
+            if sslonhttp == "Y" and (("text" in ctype) or ("javascript" in ctype)):
+                data = re.sub(r"http://([a-zA-Z0-9\-\.]*%s)"%host,r"https://\1",data)
             if "flash" in ctype and flash == "Y":
                 #SimpleFlash's replace will fail if the len of alias/target is not the same
                 #data = SimpleFlash(data).replace(target,host)
