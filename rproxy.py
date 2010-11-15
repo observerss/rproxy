@@ -224,7 +224,7 @@ class MyReverseProxyResource(Resource):
  
 site = server.Site(MyReverseProxyResource())
 #site = server.Site(ReverseProxyResource('www.google.com',80,''))
-if not DEBUG:
+if DEBUG:
     reactor.listenTCP(PORT, site)
     reactor.run()
 application = Application("RProxy")

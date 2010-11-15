@@ -2,6 +2,7 @@
 import re
 from hashlib import md5
 from simpleflash import SimpleFlash
+from quote import quote_zh
 
 class RPConfig:
     def __init__(self,path,domain="rproxy.org"):
@@ -87,6 +88,8 @@ class RPConfig:
         data = self._process(host,ctype,data)
         # some spefic repl for facebook,twitter,etc
         data = self.__process(host,ctype,data)
+        # quote chinese characters
+        data = quote_zh(data,ctype)
         return data
 
     def _process(self,host,ctype,data):
