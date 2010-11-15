@@ -21,7 +21,12 @@ def quote_zh(data, ctype=None):
     else:
         charset = None
     if charset:
-        data = data.decode(charset)
+        try:
+            if charset == "gb2312" or charset == "gbk":
+                charset = "gb18030"
+            data = data.decode(charset)
+        except:
+            pass
     else:
         for charset in ('utf-8', 'gb18030', 'big5'):
             try:
