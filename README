@@ -17,11 +17,26 @@ Rproxy - twisted based reverse proxy
 2.Install
 ---------
 
+1.1 install git-core,twisted,mako,python-openssl,bitstring
 
---------
-3.Config
---------
+# apt-get install git-core python-twisted python-mako python-openssl python-setuptools
+# easy_install bitstring
 
+1.2 download source code
+
+# cd /var/www
+# git clone git://github.com/observerss/rproxy.git
+
+------------
+3.Config&Run
+------------
+# cd /var/www/rproxy
+# vi rproxy.py
+
+Change PORT->8484,DOMAIN->"yourdomain:8484"
+# twistd -y rproxy.py
+
+Visit yourdomain:8484, make configuration
 
 -------
 4.About

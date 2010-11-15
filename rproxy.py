@@ -36,12 +36,10 @@ class MyProxyClient(ProxyClient):
 
     def handleHeader(self, key, value):
         value = self.factory.rp.get_aliasheader(self.factory.host,value) 
-        if key == 'Cache-Control':
-            value = 'public'
         if DEBUG:
             print key,value
         if key == "Content-Type" and (value.startswith("text") or \
-                ("java" in value)):
+                ("java" in value) or ("flash" in value)):
             self.replace = True
             self.ctype = value
         if key == "Content-Encoding":
@@ -80,7 +78,7 @@ class MyProxyClient(ProxyClient):
             else:
                 html = self._buffer
             self._buffer = self.factory.rp.process(self.factory.host,self.ctype,html)
-            if self.reencode:
+            if self.reencode and ("flash" not in self.ctype):
                 newbuffer = StringIO.StringIO()
                 gzipper = gzip.GzipFile(fileobj=newbuffer,mode='wb')
                 gzipper.write(self._buffer)
@@ -140,7 +138,7 @@ class MyReverseProxyResource(Resource):
             return self.confpage(request)
         
         self.realhost,self.port,self.scheme = self.rp.get_realhost(self.host)
-        # if not redirect is found, confpage again
+        # if no alias is found, confpage again
         if self.realhost == self.host:
             return self.confpage(request)
 
@@ -151,9 +149,7 @@ class MyReverseProxyResource(Resource):
 
         for k,v in request.getAllHeaders().items():
             request.received_headers[k] = self.rp.get_realheader(self.host,v)
-#        value = request.getHeader("referer")
-#        if value:
-#            request.received_headers['referer']=self.rp.get_realheader(self.host,value)
+
         request.received_headers['host'] = self.realhost
         request.content.seek(0, 0)
         clientFactory = self.proxyClientFactoryClass(
@@ -228,7 +224,7 @@ class MyReverseProxyResource(Resource):
  
 site = server.Site(MyReverseProxyResource())
 #site = server.Site(ReverseProxyResource('www.google.com',80,''))
-if DEBUG:
+if not DEBUG:
     reactor.listenTCP(PORT, site)
     reactor.run()
 application = Application("RProxy")

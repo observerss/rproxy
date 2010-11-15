@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import re
 from hashlib import md5
+from simpleflash import SimpleFlash
 
 class RPConfig:
     def __init__(self,path,domain="rproxy.org"):
@@ -63,6 +64,9 @@ class RPConfig:
         shost = self.striphost(host)
         if self.cfgdict.has_key(shost):
             target = self.cfgdict[shost][0]
+            sslonhttp = self.cfgdict[shost][7]
+            if sslonhttp == "Y":
+                value = value.replace("http://","https://")
             return value.replace(target,shost)
         return value
 
@@ -94,20 +98,28 @@ class RPConfig:
                     ("text" in ctype):
                     #(ctype.startswith("application/x-shockwave-flash") and flash == "Y"):
                 data = data.replace(target,host)
-            if sslonhttp == "Y":
+            if sslonhttp == "Y" and ("text" in ctype) or ("javascript" in ctype):
                 data = re.sub(r"http://([a-zA-Z0-9\-\.]+%s)"%self.domain,r"https://\1",data)
+            if "flash" in ctype and flash == "Y":
+                #SimpleFlash's replace will fail if the len of alias/target is not the same
+                #data = SimpleFlash(data).replace(target,host)
+                pass
         return data
 
     def __process(self,host,ctype,data):
         if self.cfgdict.has_key(host):
             target,alias,html,css,js,flash,extern,sslonhttp = self.cfgdict[host]
-            if target == "facebook.com" and "javascript" in ctype:
+            if (target == "facebook.com") and ("javascript" in ctype):
                 data = data.replace(r"'\/\/www.'+e+'.com\/ajax\/ua_callback.php'",
                     r"'\/\/%s\/ajax\/ua_callback.php'"%host )
             if target == "twitter.com":
                 data = data.replace("document.domain = 'twitter.com';",  r"")
-            if target == "twimg.com" and "javascript" in ctype:
+            if (target == "twimg.com") and ("javascript" in ctype):
                 data = re.sub(r"document\.domain\s*=\s*('|\")twitter\.com('|\")\s*;?", r"", data)
+            if (target == "ytimg.com") and ("flash" in ctype):
+                #data = SimpleFlash(data).replace("www.youtube.com","wwyt.rproxy.org")
+                #you tube cannot work
+                pass
         return data
 
     def save(self):
