@@ -132,6 +132,10 @@ class MyReverseProxyResource(Resource):
         """
         Render a request by forwarding it to the proxied server.
         """
+        #robots
+        if request.uri == "/robots.txt":
+            return open("robots.txt").read()
+
         self.host = request.received_headers['host']
         if self.host == DOMAIN or \
             self.host == "www."+DOMAIN:
