@@ -67,7 +67,7 @@ class MyProxyClient(ProxyClient):
                     buffer1 = StringIO.StringIO(self._buffer)
                     gzipper = gzip.GzipFile(fileobj=buffer1)
                     html = gzipper.read()
-                except Exception as what:
+                except Exception, what:
                     print self.factory.realhost,what
                     html = self._buffer
             elif self.encoding == 'deflate':
