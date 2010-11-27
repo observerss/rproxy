@@ -14,30 +14,38 @@ from pickle import load,dump
 import StringIO,gzip,zlib
 import os,sys
 from mako.template import Template
+from hashlib import md5
 
 PATH = "/var/www/rproxy"
 sys.path.append(PATH)
 from rpconfig import RPConfig
+from caching import Cache
 
 WEBCONFIG = True
 DEBUG = False
 CONFPATH = PATH + "/rproxy.cfg"
 DOMAIN = "rproxy.org"
 PORT = 8484
+CACHE_MEMORYLIMIT = 64*1024*1024
+CACHE_MAXOBJECT = 256*1024
+CACHE_DURATION = 60*60*24
+GLOBALCACHE = Cache(CACHE_MEMORYLIMIT,CACHE_MAXOBJECT,CACHE_DURATION)
 
 class MyProxyClient(ProxyClient):
     def __init__(self, *args, **kwargs):
-        self._buffer = ''
+        self._buffer = []
         self.encoding = ''
         self.ctype = ''
         self.reencode = True
         self.replace = False
+        self.headers_to_cache = {}
         ProxyClient.__init__(self,*args,**kwargs)
 
     def handleHeader(self, key, value):
         value = self.factory.rp.get_aliasheader(self.factory.host,value) 
         if DEBUG:
-            print key,value
+            pass
+            #print key,value
         if key == "Content-Type" and (value.startswith("text") or \
                 ("java" in value) or ("flash" in value)):
             self.replace = True
@@ -48,20 +56,18 @@ class MyProxyClient(ProxyClient):
         if key == "Content-Length":
             return
         else:
+            self.headers_to_cache[key] = value
             ProxyClient.handleHeader(self, key, value)
  
-    def handleEndHeaders(self):
-        #let handleResponseEnd do this
-        pass 
-
     def handleResponsePart(self, buffer):
-        if self.replace:
-            self._buffer += buffer
-        else:
+        #self._buffer += buffer
+        self._buffer.append(buffer)
+        if not self.replace:
             ProxyClient.handleResponsePart(self,buffer)
 
     def handleResponseEnd(self):
-        if self.replace:
+        self._buffer = ''.join(self._buffer)
+        if self.replace: #if content replace is needed
             if self.encoding == 'gzip':
                 try:
                     buffer1 = StringIO.StringIO(self._buffer)
@@ -84,14 +90,18 @@ class MyProxyClient(ProxyClient):
                 gzipper.write(self._buffer)
                 gzipper.close()
                 self._buffer = newbuffer.getvalue()
+                self.headers_to_cache["Content-Encoding"]="gzip"
                 ProxyClient.handleHeader(self,"Content-Encoding","gzip")
+            self.headers_to_cache["Content-Length"]=len(self._buffer)
             ProxyClient.handleHeader(self, "Content-Length", len(self._buffer))
-            ProxyClient.handleEndHeaders(self)
             ProxyClient.handleResponsePart(self,self._buffer)
         else:
             if self.encoding:
+                self.headers_to_cache["Content-Encoding"]=self.encoding
                 ProxyClient.handleHeader(self,"Content-Encoding",self.encoding)
             ProxyClient.handleEndHeaders(self)
+            if len(self._buffer):
+                self.factory.cache.set(self.factory.key,(self.headers_to_cache,self._buffer))
         ProxyClient.handleResponseEnd(self) 
 
 class MyProxyClientFactory(ProxyClientFactory):
@@ -100,6 +110,8 @@ class MyProxyClientFactory(ProxyClientFactory):
         self.host = ''
         self.realhost = ''
         self.rp = None
+        self.cache = None
+        self.key = None
         ProxyClientFactory.__init__(self,*args,**kwargs)
 
     def buildProtocol(self, addr):
@@ -114,6 +126,7 @@ class MyReverseProxyResource(Resource):
     def __init__(self,reactor=reactor):
         Resource.__init__(self)
         self.rp = RPConfig(CONFPATH,domain=DOMAIN)
+        self.cache = GLOBALCACHE
         self.reactor = reactor
         self.scheme = ''
         self.host = ''
@@ -160,15 +173,28 @@ class MyReverseProxyResource(Resource):
             request.method, request.uri, request.clientproto,
             request.getAllHeaders(), request.content.read(), request)
         if DEBUG:
-            print self.realhost,self.port,self.scheme
-            print request.method
-            print request.uri
-            print request.clientproto
-            print request.getAllHeaders()
-            print request.content.read()
+            print self.realhost,self.port,self.scheme,request.method,request.uri
+            #print request.clientproto
+            #print request.getAllHeaders()
+            #print request.content.read()
         clientFactory.host = self.host
         clientFactory.realhost = self.realhost
         clientFactory.rp = self.rp
+        clientFactory.cache = self.cache
+
+        #cached?
+        key = md5(self.host+request.uri).hexdigest()
+        if request.method == "GET":
+            cacheddata = self.cache.get(key)
+            if cacheddata:
+                headers,data = cacheddata
+                #request.setResponseCode(304,'(Not Modified)')
+                request.setResponseCode(200,'OK')
+                for k,v in headers.items():
+                    request.setHeader(k,v)
+                return data
+        clientFactory.key = key
+
         if self.scheme == 'https':
             self.reactor.connectSSL(self.realhost,self.port,clientFactory,ssl.ClientContextFactory())
         else:
