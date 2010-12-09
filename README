@@ -28,25 +28,24 @@ The rproxy is a open-source twisted based enhanced reverse proxy that does a lot
 
 1.2 download source code
 
-# cd /var/www
-# git clone git://github.com/observerss/rproxy.git
+# cd /var/www; git clone git://github.com/observerss/rproxy.git
 
 ------------
 3.Config&Run
 ------------
 1) pure rproxy
-# vi /var/www/rproxy/rproxy.py
+# cd /var/www/rproxy; vi src/rproxy.py
 Change PORT->8484,DOMAIN->"yourdomain:8484"
-# cd /var/www/rproxy
 # twistd -y src/rproxy.py
 
 Visit yourdomain:8484, make configuration
 
 2) rproxy+nginx
-# vi /var/www/rproxy/rproxy.py
+# vi src/rproxy.py
 Change DOMAIN->"yourdomain"
 Change PORT->8484
 
+# apt-get install nginx
 # vi /etc/nginx/sites-enabled/rproxy
 server {
         listen          80;
@@ -60,8 +59,8 @@ server {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
 }
-# cd /var/www/rproxy
-# twistd -y rproxy.py
+# nginx -s reload
+# cd /var/www/rproxy; twistd -y rproxy.py
 
 Visit yourdomain, make configurations
 
