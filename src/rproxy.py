@@ -10,6 +10,10 @@ from twisted.application import internet,app
 from twisted.web import http,server
 from twisted.web.proxy import Resource,ProxyClientFactory,ProxyClient,ReverseProxyResource
 from twisted.web.server import NOT_DONE_YET
+
+from twisted.python import logfile
+app.logfile.LogFile = logfile.DailyLogFile
+
 from pickle import load,dump
 import StringIO,gzip,zlib
 import os,sys
@@ -17,7 +21,8 @@ from mako.template import Template
 from hashlib import md5
 
 PATH = "/var/www/rproxy"
-sys.path.append(PATH)
+app.logfile.directory = PATH+"/logs"
+sys.path.append(PATH+"/src")
 from rpconfig import RPConfig
 from caching import Cache
 
@@ -147,7 +152,7 @@ class MyReverseProxyResource(Resource):
         """
         #robots
         if request.uri == "/robots.txt":
-            return open("robots.txt").read()
+            return open(PATH+"/robots.txt").read()
 
         self.host = request.received_headers['host']
         if self.host == DOMAIN or \
@@ -202,7 +207,7 @@ class MyReverseProxyResource(Resource):
         return NOT_DONE_YET
 
     def page_index(self):
-            html = Template(open("index.html").read()).render(cfgs=self.rp.cfgs,domain=DOMAIN)
+            html = Template(open(PATH+"/templates/index.html").read()).render(cfgs=self.rp.cfgs,domain=DOMAIN)
             return html
 
     def confpage(self,request):
@@ -216,13 +221,13 @@ class MyReverseProxyResource(Resource):
             return self.page_index()
         elif request.uri.startswith("/add"):
             cfg = ['','','Y','Y','Y','Y','N','N']
-            html = Template(open("edit.html").read()).render(cfg=cfg)
+            html = Template(open(PATH+"/templates/edit.html").read()).render(cfg=cfg)
             return html
         elif request.uri.startswith("/edit"):
             if request.method == "GET":
                 alias = request.uri.split("=")[-1]
                 cfg = self.rp.get_config(alias)
-                html = Template(open("edit.html").read()).render(cfg=cfg)
+                html = Template(open(PATH+"/tempaltes/edit.html").read()).render(cfg=cfg)
                 return html
             elif request.method == "POST":
                 args = request.args
@@ -241,14 +246,14 @@ class MyReverseProxyResource(Resource):
                     pass
                 return self.page_index() 
         else:
-            if os.path.exists(request.uri[1:]):
-                if request.uri[1:].endswith('css'):
+            if os.path.exists(PATH+request.uri):
+                if request.uri.endswith('css'):
                     request.setHeader('content-type', 'text/css')
-                elif request.uri[1:].endswith('jpg'):
+                elif request.uri.endswith('jpg'):
                     request.setHeader('content-type', 'image/jpeg')
                 else:
                     request.setHeader('content-type', 'text/plain')
-                return open(request.uri[1:]).read()
+                return open(PATH+request.uri).read()
             else:
                 return "Not Found"
  
