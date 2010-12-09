@@ -21,7 +21,7 @@ from mako.template import Template
 from hashlib import md5
 
 PATH = "/var/www/rproxy"
-app.logfile.directory = PATH+"/logs"
+#app.logfile.directory = PATH+"/logs"
 sys.path.append(PATH+"/src")
 from rpconfig import RPConfig
 from caching import Cache
