@@ -23,8 +23,8 @@ The rproxy is a open-source twisted based enhanced reverse proxy that does a lot
 
 1.1 install git-core,twisted,mako,python-openssl,bitstring
 
-# apt-get install git-core python-twisted python-mako python-openssl python-setuptools
-# easy_install bitstring
+# apt-get install git-core python-openssl python-setuptools
+# easy_install bitstring twisted mako 
 
 1.2 download source code
 
@@ -38,7 +38,7 @@ The rproxy is a open-source twisted based enhanced reverse proxy that does a lot
 # vi /var/www/rproxy/rproxy.py
 Change PORT->8484,DOMAIN->"yourdomain:8484"
 # cd /var/www/rproxy
-# twistd -y rproxy.py
+# twistd -y src/rproxy.py
 
 Visit yourdomain:8484, make configuration
 
