@@ -227,7 +227,7 @@ class MyReverseProxyResource(Resource):
             if request.method == "GET":
                 alias = request.uri.split("=")[-1]
                 cfg = self.rp.get_config(alias)
-                html = Template(open(PATH+"/tempaltes/edit.html").read()).render(cfg=cfg)
+                html = Template(open(PATH+"/templates/edit.html").read()).render(cfg=cfg)
                 return html
             elif request.method == "POST":
                 args = request.args
