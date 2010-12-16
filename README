@@ -23,7 +23,7 @@ The rproxy is a open-source twisted based enhanced reverse proxy that does a lot
 
 1.1 install git-core,twisted,mako,python-openssl,bitstring
 
-# apt-get install git-core python-openssl python-setuptools
+# apt-get install git-core python-openssl python-setuptools python-dev
 # easy_install bitstring twisted mako 
 
 1.2 download source code
